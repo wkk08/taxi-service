@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taxi-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: taxi-service
+  template:
+    metadata:
+      labels:
+        app: taxi-service
+    spec:
+      containers:
+      - name: taxi-service
+        image: taxi-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_ENV
+          value: "production"
+        - name: DATABASE_URL
+          value: "sqlite:///taxi.db"
+        - name: SECRET_KEY
+          value: "dev-secret-key-change-in-production"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5

@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: taxi-ingress
+  namespace: default
+  annotations:
+    # Ingress控制器注解（根据你的Ingress Controller选择）
+
+    # Nginx Ingress Controller注解
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+
+    # 如果使用cert-manager管理SSL证书
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+    # 如果使用HTTP/2
+    nginx.ingress.kubernetes.io/http2-push-preload: "true"
+spec:
+  # TLS配置（HTTPS）
+  tls:
+  - hosts:
+    - taxi.yourdomain.com  # 你的域名
+    secretName: taxi-tls-secret  # TLS证书Secret名称
+
+  # 路由规则
+  rules:
+  - host: taxi.yourdomain.com  # 你的域名
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: taxi-service
+            port:
+              number: 80

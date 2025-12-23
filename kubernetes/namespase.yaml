@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: taxi-namespace
+  labels:
+    name: taxi-namespace
+    environment: production

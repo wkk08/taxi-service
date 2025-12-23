@@ -1,0 +1,44 @@
+name: Manual Deploy to Kubernetes
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '部署环境'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+      image_tag:
+        description: '镜像标签 (默认: latest)'
+        required: false
+        default: 'latest'
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+    
+    - name: Deploy to Kubernetes
+      run: |
+        echo "🚀 部署到 ${{ github.event.inputs.environment }} 环境"
+        echo "使用镜像标签: ${{ github.event.inputs.image_tag }}"
+        
+        # 更新deployment.yaml中的镜像标签
+        if [ -f kubernetes/deployment.yaml ]; then
+          sed -i "s|image: .*|image: ghcr.io/${{ github.repository }}:${{ github.event.inputs.image_tag }}|" kubernetes/deployment.yaml
+          kubectl apply -f kubernetes/deployment.yaml
+          echo "✅ 部署完成"
+        else
+          echo "⚠️ 找不到Kubernetes部署文件"
+        fi

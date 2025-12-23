@@ -1,0 +1,47 @@
+# 忽略文件
+.git/
+.github/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 测试文件
+tests/
+.coverage
+htmlcov/
+.coverage.*
+*.cover
+
+# 日志文件
+*.log
+logs/
+
+# 编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 文档
+docs/
+*.md
+!README.md
+
+# Kubernetes文件（如果需要构建到镜像中则取消注释）
+kubernetes/
+
+# 其他
+*.db
+*.sqlite3

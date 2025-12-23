@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taxi-config
+  namespace: default
+data:
+  # 应用配置
+  flask-env: "production"
+  app-version: "1.0.0"
+  debug-mode: "false"
+  
+  # 数据库配置
+  database-name: "taxi_db"
+  database-pool-size: "10"
+  
+  # Redis配置
+  redis-ttl: "3600"
+  
+  # 业务配置
+  max-ride-distance: "100"
+  base-fare: "10"
+  per-km-rate: "2"
